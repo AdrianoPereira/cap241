@@ -7,24 +7,27 @@ Heap::Heap(int n) {
     this->_last = 0;
 }
 
+//Método auxiliar para pegar o índice antecessor de um dado índice de nó 
 const int Heap::getParent(int child) const {
     return (child % 2 == 0) ? (child /2 ) -1 : child/2;
 }
 
+// Método auxuliar para retornar o índice do nó filho esquerdo 
 const int Heap::getLeftChild(int parent) const {
     return 2*parent +1;
 }
 
+// Método auxuliar para retornar o índice do nó filho direito
 const int Heap::getRightChild(int parent) const {
     return 2*parent+2;
 }
 
+// Método auxiliar para ajustar os nós de acordo com as propriedades da heap ao ser inserido uma nova chave
 void Heap::fixUpHeap() {
     int child = this->_last-1;
     int parent = getParent(child);
 
     while (this->_heap[child] > this->_heap[parent] && child >=0 && parent >= 0) {
-        // std::cout << "entry\n";
         std::swap(this->_heap[child], this->_heap[parent]);
         child = parent;
         parent = getParent(child);
@@ -36,28 +39,15 @@ void Heap::insert(int key) {
         std::cout << "A Heap is Full\n";
         return;
     }
-    
     this->_heap[this->_last++] = key;
     this->fixUpHeap();
-    // int parent = this->_last;
-
-    // if(this->_last <= this->_size-1) {
-    //     this->_heap[this->_last] = key;
-        
-    //     while(this->_last > 0 && this->_heap[parent] > this->_heap[parent/2]) {
-    //         if(this->_heap[parent] > this->_heap[parent/2]) {
-    //             std::swap(this->_heap[parent], this->_heap[parent/2]);
-    //             parent /= 2;
-    //         }
-    //     }
-    // }
-    // this->_last++;
 }
 
 const int Heap::maximum() const {
     return this->_heap[0];
 }
 
+// Método auxiliar para ajustar os nós de acordo com as propriedades da heap ao ser removida uma chave
 void Heap::fixDownHeap() {
     int parent = 0;
 
@@ -85,15 +75,8 @@ void Heap::fixDownHeap() {
 void Heap::extrac_max() {
     int child = this->_last-1;
     std::swap(this->_heap[child], this->_heap[0]);
-
     int value = this->_heap[this->_last--];
-
     this->fixDownHeap();
-    
-}
-
-Heap::~Heap() {
-    delete[] this->_heap;
 }
 
 void Heap::show() {
@@ -101,5 +84,10 @@ void Heap::show() {
         std::cout << (x>0 ? " " : "")  << this->_heap[x];
     }
     std::cout << std::endl;
+}
+
+// Destrutor: Liberar ao finalizar o programa o espaço de memória alocado pela Heap.
+Heap::~Heap() {
+    delete[] this->_heap;
 }
 
