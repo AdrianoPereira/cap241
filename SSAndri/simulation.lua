@@ -12,20 +12,30 @@ function countNeighbors(cell, val)
   return count
 end
 
-dimension = 32
+dimension = 40
 -- print(Random({min=1, max=5, step=1}):number()..' number')
 -- print(Random():sample()..' float')
 Evacuation = Model{
     finalTime = 900,
     -- random = true,
     dim = dimension,
-    people = 20,
+    people = 2,
+    t = {},
     pos_door = Random({min=0, max=3, step=1}):sample(),
     idx_door = Random({min=0, max=dimension-1, step=1}):sample(),
     random = true,
-    
     init = function(self)
-        print(self.pos_door..' ---- '..self.idx_door)
+        -- print('Door in X = '..self.pos_door..' and Y = '..self.idx_door)
+        if self.pos_door == 0 then
+            print('Door X = 0'..' Y = '..self.idx_door)
+        elseif self.pos_door == 1 then
+            print('Door X = '..self.idx_door..' Y = '..self.dim-1)            
+        elseif self.pos_door == 2 then
+            print('Door X = '..(self.dim-1)..' Y = '..self.idx_door)
+        elseif self.pos_door == 3 then
+            print('Door X = '..self.idx_door..' Y = '..0)
+        end
+        print('Total people: '..self.people)
         self.cell = Cell {
             init = function(cell)
                 if cell.y == 0 then --Top wall
@@ -57,22 +67,35 @@ Evacuation = Model{
                         end
                     end
                 else
-                    cell.state = "empty" 
-                    s = Random{"empty", "people"}
-                    cell.state = s:sample()
+                    math.randomseed(os.time())
+                    peoples = self.people
+                    -- print('Peoples: '..peoples)
+                    for i=1, peoples do 
+                        x = math.random(1, self.dim-2)
+                        y = math.random(1, self.dim-2)
+                        table.insert(self.t, {x, y, false})
+                        if cell.x == y and cell.y == x then
+                            cell.state = "people"
+                            print('People '..i..': X = '..x..' Y = '..y)
+                            break
+                        else
+                            cell.state = "empty"
+                        end            
+                    end
+                    -- cell.state = "empty" 
+                    -- s = Random{"empty", "people"}
+                    -- cell.state = s:sample()
                 end
             end,
             execute = function(cell)
-                if cell.x ~= 0 and cell.y ~= 0 and cell.x ~= self.dim-1 and cell.y ~= self.dim-1 then
-                    s = Random{"empty", "people"}
-                    cell.state = s:sample()
+                for i=1, self.people do
+                    if cell.y == self.t[i][2] and cell.x == self.t[i][1]-1 then
+                        cell.state = "people"
+                        if self.t[i][1]-1 > 1 then
+                            self.t[i][1] = self.t[i][1]-1
+                        end
+                    end
                 end
-                -- forEachNeighbor(cell, function(neigh)
-                --     if cell.state == "people" and neigh.x ~= 0 and neigh.y ~= 0 and neigh.x ~= self.dim-1 and neigh.y ~= self.dim-1 then
-                --         neigh.past.state = "selected"
-                --         cell.state = "empty"
-                --     end
-                -- end)
             end
         }
 
