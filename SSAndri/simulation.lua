@@ -12,6 +12,36 @@ function countNeighbors(cell, val)
   return count
 end
 
+function populateNeighbors(cell)
+    cell.state = "selected"
+    if cell.parent:get(cell.x, cell.y+1).state ~= 'wall' then
+        cell = cell.parent:get(cell.x, cell.y+1)
+        cell.state = "people"
+    end
+--     cell.state = "empty"
+--     cell = cs:get(cell.x + 1, cell.y)
+--     if cell.state == 'wall' then
+--          cell.state = 'empty'
+--          return
+--     end    
+--     cell.state = "people"
+-- return
+    -- local visited = false
+    -- local rand = Random{min = 0, max = 8}
+    -- forEachNeighbor(cell, function(neigh)
+    --     if neigh.state == 'empty' and not visited and (rand:sample() > 3) then
+    --         print(neigh.x, neigh.y)
+    --         visited = true 
+    --         neigh.state = 'people'
+    --         cell.state = 'empty'
+    --         print('X = '..neigh.y..' Y = '..neigh.x)
+    --     end
+    --     if neigh.state == 'wall' then
+    --         cell.state = 'empty'
+    --     end
+    -- end)
+end
+
 dimension = 40
 -- print(Random({min=1, max=5, step=1}):number()..' number')
 -- print(Random():sample()..' float')
@@ -19,8 +49,9 @@ Evacuation = Model{
     finalTime = 900,
     -- random = true,
     dim = dimension,
-    people = 2,
+    people = 10,
     t = {},
+    mcount = 0,
     pos_door = Random({min=0, max=3, step=1}):sample(),
     idx_door = Random({min=0, max=dimension-1, step=1}):sample(),
     random = true,
@@ -88,14 +119,15 @@ Evacuation = Model{
                 end
             end,
             execute = function(cell)
-                for i=1, self.people do
-                    if cell.y == self.t[i][2] and cell.x == self.t[i][1]-1 then
-                        cell.state = "people"
-                        if self.t[i][1]-1 > 1 then
-                            self.t[i][1] = self.t[i][1]-1
-                        end
+                --print(self)
+                --forEachCell(self, function(cell)
+                    if cell.state == 'people' then
+                        -- if self.mcount < 20 then
+                        populateNeighbors(cell)
+                        --self.mcount = self.mcount + 1
+                        -- end
                     end
-                end
+                --end)
             end
         }
 
