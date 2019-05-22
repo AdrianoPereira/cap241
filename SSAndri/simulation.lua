@@ -12,12 +12,30 @@ function countNeighbors(cell, val)
   return count
 end
 
-function populateNeighbors(cell)
-    cell.state = "selected"
-    if cell.parent:get(cell.x, cell.y+1).state ~= 'wall' then
-        cell = cell.parent:get(cell.x, cell.y+1)
-        cell.state = "people"
+function populateNeighbors(cell, dx, dy)
+    -- cell.state = "empty"
+
+    -- if cell.parent:get()
+    print((cell.x)..' '..(dx))
+    
+    if cell.x > dy then
+        if cell.parent:get(cell.y-1, cell.x).state == 'empty' then
+            cell.state = 'empty'
+            cell.parent:get(cell.y-1, cell.x).state = 'people'
+        end
+    elseif cell.x ~= dy then
+        if cell.parent:get(cell.y+1, cell.x).state == 'empty' then
+            cell.state = 'empty'
+            cell.parent:get(cell.y+1, cell.x).state = 'people'
+        end
     end
+    -- if cell.parent:get(cell.x, cell.y-1) == 'empty' then -- top valid
+
+    -- end
+    -- if cell.parent:get(cell.x, cell.y-1).state ~= 'wall' then
+    --     cell = cell.parent:get(cell.x, cell.y-1)
+    --     cell.state = "people"
+    -- end
 --     cell.state = "empty"
 --     cell = cs:get(cell.x + 1, cell.y)
 --     if cell.state == 'wall' then
@@ -52,18 +70,28 @@ Evacuation = Model{
     people = 10,
     t = {},
     mcount = 0,
+    dx = 0,
+    dy = 0,
     pos_door = Random({min=0, max=3, step=1}):sample(),
     idx_door = Random({min=0, max=dimension-1, step=1}):sample(),
     random = true,
     init = function(self)
         -- print('Door in X = '..self.pos_door..' and Y = '..self.idx_door)
         if self.pos_door == 0 then
+            self.dx = 0
+            self.dy = self.idx_door
             print('Door X = 0'..' Y = '..self.idx_door)
         elseif self.pos_door == 1 then
+            self.dx = self.idx_door
+            self.dy = self.dim-1
             print('Door X = '..self.idx_door..' Y = '..self.dim-1)            
         elseif self.pos_door == 2 then
+            self.dx = self.dim-1
+            self.dy = self.idx_door
             print('Door X = '..(self.dim-1)..' Y = '..self.idx_door)
         elseif self.pos_door == 3 then
+            self.dx = self.idx_door
+            self.dy = 0
             print('Door X = '..self.idx_door..' Y = '..0)
         end
         print('Total people: '..self.people)
@@ -123,7 +151,7 @@ Evacuation = Model{
                 --forEachCell(self, function(cell)
                     if cell.state == 'people' then
                         -- if self.mcount < 20 then
-                        populateNeighbors(cell)
+                        populateNeighbors(cell, self.dx, self.dy)
                         --self.mcount = self.mcount + 1
                         -- end
                     end
