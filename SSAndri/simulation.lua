@@ -72,8 +72,8 @@ Evacuation = Model{
     mcount = 0,
     dx = 0,
     dy = 0,
-    pos_door = Random({min=0, max=3, step=1}):sample(),
-    idx_door = Random({min=0, max=dimension-1, step=1}):sample(),
+    pos_door = 3 ,-- Random({min=0, max=3, step=1}):sample(),
+    idx_door = 17,-- Random({min=0, max=dimension-1, step=1}):sample(),
     random = true,
     init = function(self)
         -- print('Door in X = '..self.pos_door..' and Y = '..self.idx_door)
