@@ -27,6 +27,8 @@ class LineSegment {
         const Point& second() const;
         bool contains(const Point& p) const;
         bool intersects(const LineSegment& other) const;
+        
+        const double& distance();
 };
 
 class Polygon {
@@ -38,4 +40,5 @@ class Polygon {
         ~Polygon();
 };
 
-#endif
+
+#endif      //__POLYGON__HPP__

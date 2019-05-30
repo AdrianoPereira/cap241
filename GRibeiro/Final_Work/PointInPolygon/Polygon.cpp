@@ -1,4 +1,5 @@
 #include "Polygon.hpp"
+#include <cmath>
 
 Point::Point(double x, double y):x_(x), y_(y){}
 
@@ -20,4 +21,9 @@ const Point& LineSegment::first() const {
 
 const Point& LineSegment::second() const {
     return this->second_;
+}
+
+const double& LineSegment::distance(){
+    return this->first().get_x();
+    //return sqrt((pow(abs(this->first().get_x()-this->second().get_x()),2))   +   pow(abs(this->first().get_y()-this->second().get_y()),2));
 }
