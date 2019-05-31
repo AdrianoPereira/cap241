@@ -1,0 +1,8 @@
+*.exe
+*.o
+.vscode/
+.vscode/*
+*.tme
+*.zip
+.ipynb
+GRibeiro/Final_Work/teste/pa_municipios/MAPA_BASE_PAMPA_2016/MAPA_BASE_PAMPA_2016.shp
