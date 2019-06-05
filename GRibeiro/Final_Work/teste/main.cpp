@@ -103,6 +103,7 @@ int main() {_
             }
             for(auto c : centroids) {
                 count = poly_city.inPolygon(c) ? count+1 : count;
+                // cout << path_city << " ---- " << c.getX() << ", " << c.getY() << endl;  
                 // cout << cleanName(path_city) << " Point(" << c.getX() << ", " << c.getY() << ") is " << (poly_city.inPolygon(c) ? "inside" : "outside")  << endl; 
             }
         }
